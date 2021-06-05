@@ -1,0 +1,23 @@
+ {
+   "targetArn": "arn:aws:iot:<REGION>:<ACCOUNT_ID>:thinggroup/ROS2_Sample_Robots",
+   "deploymentName": "ROS2 Sample Robots Deployment",
+   "components": {
+       "com.example.ros2.demo" : { 
+         "componentVersion": "1.0.0"
+       },
+       "aws.greengrass.Cli": {
+           "componentVersion": "2.0.3"
+       }
+   },
+   "deploymentPolicies": {
+       "failureHandlingPolicy": "DO_NOTHING",
+       "componentUpdatePolicy": {
+           "timeoutInSeconds": 60,
+           "action": "NOTIFY_COMPONENTS"
+       },
+       "configurationValidationPolicy": {
+           "timeoutInSeconds": 60
+       }
+   },
+   "iotJobConfiguration": {}
+}

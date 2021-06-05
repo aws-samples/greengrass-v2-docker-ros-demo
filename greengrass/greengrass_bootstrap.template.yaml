@@ -1,0 +1,132 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Metadata:
+  License: Apache-2.0
+Description: 'Sample cloudformation template that creates default Greengrass provisioning resources.'
+Resources:
+  GreengrassProvisioningUser:
+    Type: AWS::IAM::User
+  S3Bucket:
+    Type: AWS::S3::Bucket
+  GreengrassProvisioningUserGroup:
+    Type: AWS::IAM::Group
+  Users:
+    Type: AWS::IAM::UserToGroupAddition
+    Properties:
+      GroupName: !Ref 'GreengrassProvisioningUserGroup'
+      Users: [!Ref 'GreengrassProvisioningUser']
+  GreengrassTokenExchangeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "GreengrassV2TokenExchangeRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - credentials.iot.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+  RobotPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: RobotPolicy
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: [ "s3:ListBucket" ]
+            Resource: !Join ["",[ "arn:aws:s3:::", !Ref S3Bucket ] ]
+          - Effect: Allow
+            Action: [ 
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject"
+                    ]
+            Resource: !Join ["",["arn:aws:s3:::", !Ref S3Bucket,"/*"] ]
+          - Effect: Allow
+            Action: [ 
+                  "ecr:GetAuthorizationToken",
+                  "ecr:BatchGetImage",
+                  "ecr:GetDownloadUrlForLayer"
+                    ]
+            Resource: '*'
+          - Effect: Allow
+            Action: [ "greengrass:" ]
+            Resource: '*'
+          - Effect: Allow
+            Action: [ "iot:" ]
+            Resource: '*'
+      Roles:  [ !Ref 'GreengrassTokenExchangeRole' ]
+  GreengrassTokenPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: GreengrassTokenExchangePolicy
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: [ 
+                    "iot:DescribeCertificate",
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents",
+                    "logs:DescribeLogStreams",
+                    "iot:Connect",
+                    "iot:Publish",
+                    "iot:Subscribe",
+                    "iot:Receive",
+                    "s3:GetBucketLocation"
+                    ]
+            Resource: '*'
+      Roles:  [ !Ref 'GreengrassTokenExchangeRole' ]
+  GreengrassProvisioningUserPolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: GreengrassProvisioningUsers
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: [ 
+                      "iot:AddThingToThingGroup",
+                      "iot:AttachPolicy",
+                      "iot:AttachThingPrincipal",
+                      "iot:CreateKeysAndCertificate",
+                      "iot:CreatePolicy",
+                      "iot:CreateRoleAlias",
+                      "iot:CreateThing",
+                      "iot:CreateThingGroup",
+                      "iot:DescribeEndpoint",
+                      "iot:DescribeRoleAlias",
+                      "iot:DescribeThingGroup",
+                      "iot:GetPolicy",
+                      "iam:GetRole",
+                      "iam:CreateRole",
+                      "iam:PassRole",
+                      "iam:CreatePolicy",
+                      "iam:AttachRolePolicy",
+                      "iam:GetPolicy",
+                      "sts:GetCallerIdentity"
+                    ]
+            Resource: '*'
+          - Effect: Allow
+            Action: [ 
+                      "greengrass:CreateDeployment",
+                      "iot:CancelJob",
+                      "iot:CreateJob",
+                      "iot:DeleteThingShadow",
+                      "iot:DescribeJob",
+                      "iot:DescribeThing",
+                      "iot:DescribeThingGroup",
+                      "iot:GetThingShadow",
+                      "iot:UpdateJob",
+                      "iot:UpdateThingShadow"
+                    ]
+            Resource: '*'
+      Groups: [!Ref 'GreengrassProvisioningUserGroup']
+    
+Outputs:
+  UserName:
+    Value: !Ref GreengrassProvisioningUser
+    Description: User name for the provisioning user.
+  S3BucketName:
+    Value: !Ref S3Bucket
+    Description: S3 bucket to upload assets to. 

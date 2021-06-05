@@ -1,0 +1,44 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": ["s3:ListBucket"],
+          "Resource": ["arn:aws:s3:::<MY_S3_BUCKET>  "]
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:PutObject",
+            "s3:GetObject",
+            "s3:DeleteObject"
+          ],
+          "Resource": ["arn:aws:s3:::<MY_S3_BUCKET>/*"]
+        },
+        {
+            "Sid": "ECRActions",
+            "Action": [
+              "ecr:GetAuthorizationToken",
+              "ecr:BatchGetImage",
+              "ecr:GetDownloadUrlForLayer"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iot:"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "GreengrassActions",
+            "Effect": "Allow",
+            "Action": [
+                "greengrass:"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
