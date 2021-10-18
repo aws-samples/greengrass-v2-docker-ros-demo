@@ -87,6 +87,10 @@ Clone this repository and run the build command. It will use the Dockerfile and 
   docker push <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/ros-foxy-greengrass-demo:latest
   ```
 
+5. Copy/paste the created docker image in ECR (*<ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/ros-foxy-greengrass-demo:latest*) into the following files, replacing the placeholder `<YOUR_PRIVATE_ECR_IMAGE_ID_ROS_GREENGRASS_DEMO>`:
+  - docker-compose.yaml
+  - greengrass/com.example.ros2.demo/1.0.0/recipes 
+
 ## Provision Greengrass 2.0 on the Robot
 
 On the **development** machine, connect to the robot over SSH or open a shell terminal on the *deployment target* linux-based device. Run the following commands in the SSH shell (*replace the placeholders with your AWS Access Key ID and Secret Key*):

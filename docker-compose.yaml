@@ -4,18 +4,18 @@ services:
   greengrass_demo_image:
     build: 
         context: ./
-    image: ros-foxy-greengrass-demo:latest
+    image: <YOUR_PRIVATE_ECR_IMAGE_ID_ROS_GREENGRASS_DEMO>
     
   talker:
-    image: ros-foxy-greengrass-demo:latest
+    image: <YOUR_PRIVATE_ECR_IMAGE_ID_ROS_GREENGRASS_DEMO>
     command: ros2 run demo_nodes_cpp talker
       
   listener:
-    image: ros-foxy-greengrass-demo:latest
+    image: <YOUR_PRIVATE_ECR_IMAGE_ID_ROS_GREENGRASS_DEMO>
     command: ros2 run demo_nodes_cpp listener
 
   greengrass_bridge:
-    image: ros-foxy-greengrass-demo:latest
+    image: <YOUR_PRIVATE_ECR_IMAGE_ID_ROS_GREENGRASS_DEMO>
     command: ros2 launch greengrass_bridge greengrass_bridge.launch.py ros_topics:="['chatter']" iot_topics:="['cloud_chatter']"
     environment:
       - AWS_REGION

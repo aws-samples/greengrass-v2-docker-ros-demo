@@ -25,12 +25,8 @@ Manifests:
   - Platform:
       os: all
     Lifecycle:
-        Install: |
-           docker tag <YOUR_PRIVATE_ECR_IMAGE_ID_ROS_GREENGRASS_DEMO> ros-foxy-greengrass-demo:latest
-        Startup: |
-           docker-compose -f {artifacts:path}/docker-compose.yaml up -d
-        Shutdown: |
-           docker-compose -f {artifacts:path}/docker-compose.yaml down
+        Run: |
+           docker-compose -f {artifacts:path}/docker-compose.yaml up
     Artifacts:
       - URI: "docker:<YOUR_PRIVATE_ECR_IMAGE_ID_ROS_GREENGRASS_DEMO>"
       - URI: "s3://<YOUR_BUCKET_NAME>/com.example.ros2.demo/1.0.0/artifacts/docker-compose.yaml"
